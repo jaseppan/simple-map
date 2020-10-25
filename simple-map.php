@@ -34,6 +34,37 @@ function sm_map() {
  
 }
 
+add_action('admin_menu', 'sm_admin_menu_page');
+
+function sm_admin_menu_page() {
+	add_menu_page( __('Simple Map'), __('Simple Map'), 'edit_posts', 'simple-map', 'sm_admin' , '', 10 );
+}
+
 add_shortcode('sm_map', 'sm_map');
+
+function sm_admin() {
+	
+	$sm_map_address = get_option( '_sm_map_address', false );
+	$sm_map_style = get_option( '_sm_map_style', false );
+
+	?>
+	<h1><?php _e('Simple Map') ?></h1>
+	<form action="" method="post">
+		<?php wp_nonce_field( 'sm-map', 'sm-map-nonce' ); ?>
+		<input type="text" name="sm-map-address" value="<?php echo $sm_map_address ?>"><br />
+		<input type="text" name="sm-map-style" value="<?php echo $sm_map_style ?>"><br />
+		<input type="submit" value="<?php _e('Update') ?>">
+	
+	</form>
+<?php }
+
+function sm_save() {
+
+	if(!current_user_can('edit_posts'))
+		return;
+
+}
+
+add_action('init', 'sm_save');
 
 ?>
